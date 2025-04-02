@@ -76,3 +76,11 @@ discardBtn.addEventListener("click", () => {
   taskForm.classList.toggle("hidden");
   console.log(discardBtn, "is clicked");
 }); 
+
+// *8*
+// now, let's get the values from the input fields and save them into the taskData array
+// add a 'submit' event listener to the taskForm element and pass in 'e' as the parameter in the callback function
+taskForm.addEventListener('submit', (e) => {
+// inside the callback function, use the preventDefault() method on 'e' to stop the browswer from refreshing the page after the form is submitted
+e.preventDefault();
+});
