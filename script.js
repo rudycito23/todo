@@ -73,7 +73,10 @@ discardBtn.addEventListener("click", () => {
   // inside the callback function, use the close() method on the confirmCloseDialog variable to close the modal
   confirmCloseDialog.close();
   // then, use classList to toggle the class "hidden" on taskForm so the form modal will close
-  taskForm.classList.toggle("hidden");
+  // delete line 77 because this line of code is moved to the clearInputFields function
+  // taskForm.classList.toggle("hidden");
+  // instead call the clearInputFields function to clear the input fields and toggle the "hidden" class to close the form modal
+  clearInputFields();
   console.log(discardBtn, "is clicked");
 });
 
@@ -135,7 +138,7 @@ taskForm.addEventListener("submit", (e) => {
   // now that the task is saved in the taskData array, let's display the task on the page
   // loop through the taskData array using the forEach() method
   // then, destructure each property from the taskData object as the parameters
-  taskData.forEach(({ id, title, date, description}) => {
+  taskData.forEach(({ id, title, date, description }) => {
     // create a template literal with the task data to display the task
     tasksContainer.innerHTML += `
     <div class="task" id="${id}"></div>
@@ -149,5 +152,26 @@ taskForm.addEventListener("submit", (e) => {
   // *13*
   // after adding the task to the page, close the form modal
   // utilize the classList.toggle() method to toggle the "hidden" class on taskForm element
-  taskForm.classList.toggle("hidden");
+  // because this line of code is moved to the clearInputFields function, delete line 153
+  // taskForm.classList.toggle("hidden");
+  // call the clearInputFields function to clear the input fields and toggle the "hidden" class to close the form modal
+  clearInputFields();
 });
+
+// *14*
+// when adding another task, the input fields retain their values;
+// instead of clearing fields one-by-one, create a function that clears all the input fields\
+// you can then call the function whenever you need to clear the input fields
+const clearInputFields = () => {
+  // set each input field to an empty string
+  titleInput.value = "";
+  dateInput.value = "";
+  descriptionInput.value = "";
+
+  // use the classList.toggle() method to toggle the "hidden" class on taskForm element
+  // this will close the form modal;
+  taskForm.classList.toggle("hidden");
+
+  // then, set the currentTask variable to an empty object
+  currentTask = {};
+};
