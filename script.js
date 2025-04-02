@@ -52,3 +52,27 @@ closeTaskFormBtn.addEventListener("click", () => {
   confirmCloseDialog.showModal();
   console.log(closeTaskFormBtn, "is clicked");
 })
+
+// *6*
+// if the user clicks 'Cancel' on the confirmCloseDialog modal, close the modal
+// the dialog element has a close() method that can be used to close a modal dialog box
+// example: dialogElement.close();
+// add an event listener to the cancelBtn and pass in a "click" event for the first argument
+// then, an anonymous callback function as the second argument
+cancelBtn.addEventListener("click", () => {
+  // inside the callback function, call the close() method on confirmCloseDialog element
+  confirmCloseDialog.close();
+  console.log(cancelBtn, "is clicked");
+})
+
+// *7*
+// if the user clicks 'Discard' on the confirmCloseDialog modal, close the modal, then hide the form modal
+// add an event listener to discardBtn and pass in a "click" event for the first argument
+// then, add a callback function
+discardBtn.addEventListener("click", () => {
+  // inside the callback function, use the close() method on the confirmCloseDialog variable to close the modal
+  confirmCloseDialog.close();
+  // then, use classList to toggle the class "hidden" on taskForm so the form modal will close
+  taskForm.classList.toggle("hidden");
+  console.log(discardBtn, "is clicked");
+}); 
