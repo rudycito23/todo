@@ -42,7 +42,7 @@ openTaskFormBtn.addEventListener("click", () => {
   console.log(openTaskFormBtn, "is clicked");
 });
 
-// *5* 
+// *5*
 // the HTML dialog element has a showModal() method that can be used to display a doal dialog box
 // example: dialogElement.showModal();
 // add an event listener to the closeTaskFormBtn and pass in a "click" event for the first argument
@@ -51,7 +51,7 @@ closeTaskFormBtn.addEventListener("click", () => {
   // inside the callback function, call the showModal() method on confirmCloseDialog element
   confirmCloseDialog.showModal();
   console.log(closeTaskFormBtn, "is clicked");
-})
+});
 
 // *6*
 // if the user clicks 'Cancel' on the confirmCloseDialog modal, close the modal
@@ -63,7 +63,7 @@ cancelBtn.addEventListener("click", () => {
   // inside the callback function, call the close() method on confirmCloseDialog element
   confirmCloseDialog.close();
   console.log(cancelBtn, "is clicked");
-})
+});
 
 // *7*
 // if the user clicks 'Discard' on the confirmCloseDialog modal, close the modal, then hide the form modal
@@ -75,12 +75,79 @@ discardBtn.addEventListener("click", () => {
   // then, use classList to toggle the class "hidden" on taskForm so the form modal will close
   taskForm.classList.toggle("hidden");
   console.log(discardBtn, "is clicked");
-}); 
+});
 
 // *8*
 // now, let's get the values from the input fields and save them into the taskData array
 // add a 'submit' event listener to the taskForm element and pass in 'e' as the parameter in the callback function
-taskForm.addEventListener('submit', (e) => {
-// inside the callback function, use the preventDefault() method on 'e' to stop the browswer from refreshing the page after the form is submitted
-e.preventDefault();
+taskForm.addEventListener("submit", (e) => {
+  // inside the callback function, use the preventDefault() method on 'e' to stop the browswer from refreshing the page after the form is submitted
+  e.preventDefault();
+
+  // *9*
+  // next, determine whether the task being added to the taskData array exists or not
+  // if the task exists, add it to the array
+  // else, update the task
+  // the findIndex() method finds and returns the index of the first element in an array that meets the criteria specified in a testing callback function
+  // if no element is found, it returns -1
+  // the callback function should return a truthy value to indicate a matching element has been found, and a falsy value otherwise
+  // example: const numbers = [1, 2, 3, 4, 5];
+  // const firstNumberLargerThanThree = numbers.findIndex((number) => number > 3);
+  // console.log(firstNumberLargerThanThree); // prints index 3
+
+  // declare a variable called dataArrIndex and assign it the value of taskData.findIndex()
+  // for findIndex() method, pass in an arrow function with 'item' as the parameter
+  const dataArrIndex = taskData.findIndex(
+    (item) =>
+      // strictly check if id poperty of 'item' === it property of currentTask
+      item.id === currentTask.id
+  );
+
+  // *10*
+  // when a user creates a task, it should be saved in an object
+  // create a const variable called taskObj and assign it the value of an empty object
+  const taskObj = {
+    // the value for the id property should be lower case; use the toLowerCase() method
+    // the final result for the id property should be a hyphenated string
+    // chain the toLowerCase() method with the splity() method to split the string into an array of words
+    // then, use the join() method to join the array of words with a hyphen
+    // next, place the value inside an embedded expression
+    // lastly, add a unique id to each task by adding another hypen and use the Date.now() method which returns the number of milliseconds since January 1, 1970
+    id: `${titleInput.value.toLowerCase().split(" ").join("-")}-${Date.now()}`,
+    title: titleInput.value,
+    date: dateInput.value,
+    description: descriptionInput.value,
+  };
+  console.log("task object: ", taskObj);
+  // *11*
+  // if there is a new task, push the taskObj into the taskData array to keep track of each task
+  // create a condition to check if dataArrIndex === -1
+  if (dataArrIndex === -1) {
+    // if true, use the unshift method to add the taskObj to the beginning of the taskData array
+    // unshift() is an array method that is used to add 1+ elements to the beginning of an array
+    // example: const arr = [1, 2, 3];
+    // arr.unshift(0); // arr is now [0, 1, 2, 3]
+    // console.log(arr); // prints [0, 1, 2, 3]
+    taskData.unshift(taskObj);
+  }
+
+  // *12*
+  // now that the task is saved in the taskData array, let's display the task on the page
+  // loop through the taskData array using the forEach() method
+  // then, destructure each property from the taskData object as the parameters
+  taskData.forEach(({ id, title, date, description}) => {
+    // create a template literal with the task data to display the task
+    tasksContainer.innerHTML += `
+    <div class="task" id="${id}"></div>
+    <p><strong>Title: </strong>${title}</p>
+    <p><strong>Date: </strong>${date}</p>
+    <p><strong>Description: </strong>${description}</p>
+    <button type="button" class="btn">Edit</button>
+    <button type="button" class="btn">Delete</button>
+    `;
+  });
+  // *13*
+  // after adding the task to the page, close the form modal
+  // utilize the classList.toggle() method to toggle the "hidden" class on taskForm element
+  taskForm.classList.toggle("hidden");
 });
