@@ -41,3 +41,14 @@ openTaskFormBtn.addEventListener("click", () => {
   taskForm.classList.toggle("hidden");
   console.log(openTaskFormBtn, "is clicked");
 });
+
+// *5* 
+// the HTML dialog element has a showModal() method that can be used to display a doal dialog box
+// example: dialogElement.showModal();
+// add an event listener to the closeTaskFormBtn and pass in a "click" event for the first argument
+// then, an anonymous callback function as the second argument
+closeTaskFormBtn.addEventListener("click", () => {
+  // inside the callback function, call the showModal() method on confirmCloseDialog element
+  confirmCloseDialog.showModal();
+  console.log(closeTaskFormBtn, "is clicked");
+})
