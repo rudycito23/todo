@@ -51,6 +51,16 @@ closeTaskFormBtn.addEventListener("click", () => {
   // inside the callback function, call the showModal() method on confirmCloseDialog element
   confirmCloseDialog.showModal();
   console.log(closeTaskFormBtn, "is clicked");
+  // create a formInputsContainValues variable to check if there is a value in each input field
+  const formInputsContainValues =
+    titleInput.value || dateInput.value || descriptionInput.value;
+  // now create a condition to check if formInputsContainValues is true;
+  // if true, use the showModal() method on confirmCloseDialog;
+  if (formInputsContainValues) {
+    confirmCloseDialog.showModal();
+  } else {
+    clearInputFields();
+  }
 });
 
 // *6*
@@ -100,62 +110,62 @@ taskForm.addEventListener("submit", (e) => {
 
   // declare a variable called dataArrIndex and assign it the value of taskData.findIndex()
   // for findIndex() method, pass in an arrow function with 'item' as the parameter
-  const dataArrIndex = taskData.findIndex(
-    (item) =>
-      // strictly check if id poperty of 'item' === it property of currentTask
-      item.id === currentTask.id
-  );
+  // const dataArrIndex = taskData.findIndex(
+  //   (item) =>
+  //     // strictly check if id poperty of 'item' === it property of currentTask
+  //     item.id === currentTask.id
+  // ); // ** MOVED TO addOrUpdateTask function **
 
   // *10*
   // when a user creates a task, it should be saved in an object
   // create a const variable called taskObj and assign it the value of an empty object
-  const taskObj = {
-    // the value for the id property should be lower case; use the toLowerCase() method
-    // the final result for the id property should be a hyphenated string
-    // chain the toLowerCase() method with the splity() method to split the string into an array of words
-    // then, use the join() method to join the array of words with a hyphen
-    // next, place the value inside an embedded expression
-    // lastly, add a unique id to each task by adding another hypen and use the Date.now() method which returns the number of milliseconds since January 1, 1970
-    id: `${titleInput.value.toLowerCase().split(" ").join("-")}-${Date.now()}`,
-    title: titleInput.value,
-    date: dateInput.value,
-    description: descriptionInput.value,
-  };
-  console.log("task object: ", taskObj);
+  // const taskObj = {
+  //   // the value for the id property should be lower case; use the toLowerCase() method
+  //   // the final result for the id property should be a hyphenated string
+  //   // chain the toLowerCase() method with the splity() method to split the string into an array of words
+  //   // then, use the join() method to join the array of words with a hyphen
+  //   // next, place the value inside an embedded expression
+  //   // lastly, add a unique id to each task by adding another hypen and use the Date.now() method which returns the number of milliseconds since January 1, 1970
+  //   id: `${titleInput.value.toLowerCase().split(" ").join("-")}-${Date.now()}`,
+  //   title: titleInput.value,
+  //   date: dateInput.value,
+  //   description: descriptionInput.value,
+  // };
+  // console.log("task object: ", taskObj); // ** MOVED TO addOrUpdateTask function **
   // *11*
   // if there is a new task, push the taskObj into the taskData array to keep track of each task
   // create a condition to check if dataArrIndex === -1
-  if (dataArrIndex === -1) {
-    // if true, use the unshift method to add the taskObj to the beginning of the taskData array
-    // unshift() is an array method that is used to add 1+ elements to the beginning of an array
-    // example: const arr = [1, 2, 3];
-    // arr.unshift(0); // arr is now [0, 1, 2, 3]
-    // console.log(arr); // prints [0, 1, 2, 3]
-    taskData.unshift(taskObj);
-  }
+  // if (dataArrIndex === -1) {
+  //   // if true, use the unshift method to add the taskObj to the beginning of the taskData array
+  //   // unshift() is an array method that is used to add 1+ elements to the beginning of an array
+  //   // example: const arr = [1, 2, 3];
+  //   // arr.unshift(0); // arr is now [0, 1, 2, 3]
+  //   // console.log(arr); // prints [0, 1, 2, 3]
+  //   taskData.unshift(taskObj);
+  // } ** MOVED TO addOrUpdateTask function **
 
   // *12*
   // now that the task is saved in the taskData array, let's display the task on the page
   // loop through the taskData array using the forEach() method
   // then, destructure each property from the taskData object as the parameters
-  taskData.forEach(({ id, title, date, description }) => {
-    // create a template literal with the task data to display the task
-    tasksContainer.innerHTML += `
-    <div class="task" id="${id}"></div>
-    <p><strong>Title: </strong>${title}</p>
-    <p><strong>Date: </strong>${date}</p>
-    <p><strong>Description: </strong>${description}</p>
-    <button type="button" class="btn">Edit</button>
-    <button type="button" class="btn">Delete</button>
-    `;
-  });
+  // taskData.forEach(({ id, title, date, description }) => {
+  //   // create a template literal with the task data to display the task
+  //   tasksContainer.innerHTML += `
+  //   <div class="task" id="${id}"></div>
+  //   <p><strong>Title: </strong>${title}</p>
+  //   <p><strong>Date: </strong>${date}</p>
+  //   <p><strong>Description: </strong>${description}</p>
+  //   <button type="button" class="btn">Edit</button>
+  //   <button type="button" class="btn">Delete</button>
+  //   `;
+  // }); // ** MOVED TO updateTaskContainer function **
   // *13*
   // after adding the task to the page, close the form modal
   // utilize the classList.toggle() method to toggle the "hidden" class on taskForm element
   // because this line of code is moved to the clearInputFields function, delete line 153
   // taskForm.classList.toggle("hidden");
   // call the clearInputFields function to clear the input fields and toggle the "hidden" class to close the form modal
-  clearInputFields();
+  addOrUpdateTask();
 });
 
 // *14*
@@ -174,4 +184,45 @@ const clearInputFields = () => {
 
   // then, set the currentTask variable to an empty object
   currentTask = {};
+};
+
+// *15*
+// let's refactor the code for readability
+// refactor the submit event listener into two functions
+// the first function will add the input values to the taskData array;
+// the second function will add the tasks to the DOM
+const addOrUpdateTask = () => {
+  const dataArrIndex = taskData.findIndex((item) => item.id === currentTask.id);
+
+  const taskObj = {
+    id: `${titleInput.value.toLowerCase().split(" ").join("-")}-${Date.now()}`,
+    title: titleInput.value,
+    date: dateInput.value,
+    description: descriptionInput.value,
+  };
+  console.log("task object: ", taskObj);
+
+  if (dataArrIndex === -1) {
+    taskData.unshift(taskObj);
+  }
+
+  updateTaskContainer();
+  clearInputFields();
+};
+
+const updateTaskContainer = () => {
+  // to clear our existing tasks, set the innerHTML of tasksContainer to an empty string
+  tasksContainer.innerHTML = "";
+
+  taskData.forEach(({ id, title, date, description }) => {
+    tasksContainer.innerHTML += `
+        <div class="task" id="${id}">
+          <p><strong>Title:</strong> ${title}</p>
+          <p><strong>Date:</strong> ${date}</p>
+          <p><strong>Description:</strong> ${description}</p>
+          <button type="button" class="btn">Edit</button>
+          <button type="button" class="btn">Delete</button>
+        </div>
+      `;
+  });
 };
