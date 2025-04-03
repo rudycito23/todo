@@ -200,7 +200,7 @@ const addOrUpdateTask = () => {
     date: dateInput.value,
     description: descriptionInput.value,
   };
-  console.log("task object: ", taskObj);
+  console.table(taskObj);
 
   if (dataArrIndex === -1) {
     taskData.unshift(taskObj);
@@ -215,14 +215,38 @@ const updateTaskContainer = () => {
   tasksContainer.innerHTML = "";
 
   taskData.forEach(({ id, title, date, description }) => {
+    // add a click event listener to both buttons
+    // 'this' refers to the current context, in this case, the 'this' points to the button that was clicked
     tasksContainer.innerHTML += `
         <div class="task" id="${id}">
           <p><strong>Title:</strong> ${title}</p>
           <p><strong>Date:</strong> ${date}</p>
           <p><strong>Description:</strong> ${description}</p>
-          <button type="button" class="btn">Edit</button>
-          <button type="button" class="btn">Delete</button>
+          <button onclick="editTask(this)" type="button" class="btn">Edit</button>
+          <button onclick="deleteTask(this)" type="button" class="btn">Delete</button>
         </div>
       `;
   });
 };
+
+// *16*
+// create a function to delete tasks;
+// find the index of the task you want to delete first
+const deleteTask = (buttonEl) => {
+  const dataArrIndex = taskData.findIndex(
+    (item) => item.id === buttonEl.parentElement.id
+  );
+
+  // remove the task from the DOM using remove() method and from the taskData array using slice()
+  // splice() is an array method that modifies arrays by removing/replacing/adding elements at a specific index,
+  // while also returning the removed elements; can take up to three arguments
+  // (index to start removing, number of elements to remove, and optional replacement element)
+  // example: const fruits = ["apple", "banana", "cherry"];
+  // const removedFruits = fruits.splice(1, 2);
+  // console.log(fruits); // prints ["apple"]
+  // console.log(removedFruits); // prints ["banana", "cherry"]
+  // use the remove() method to remove the parentElement of buttonEl from the DOM;
+  buttonEl.parentElement.remove();
+  // use the splice() method to remove the task from the taskData array
+  taskData.splice(dataArrIndex, 1);
+}
