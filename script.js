@@ -250,3 +250,20 @@ const deleteTask = (buttonEl) => {
   // use the splice() method to remove the task from the taskData array
   taskData.splice(dataArrIndex, 1);
 }
+
+// *17*
+// create an arrow function to edit tasks; pass in 'buttonEl' as the parameter
+const editTask = (buttonEl) => {
+  // find the index of the task you want to edit
+  const dataArrIndex = taskData.findIndex((item) => item.id === buttonEl.parentElement.id);
+
+  // use square brackets to retrieve the task to be edited from taskData array using dataArrIndex
+  currentTask = taskData[dataArrIndex];
+
+  // the task to be edited is now stored in the currentTask object;
+  // stage it for editing insdie the input fields by setting the value of each input field,
+  // to currentTask's object properties
+  titleInput.value = currentTask.title;
+  dateInput.value = currentTask.date;
+  descriptionInput.value = currentTask.description;
+};
