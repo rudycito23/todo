@@ -49,14 +49,21 @@ openTaskFormBtn.addEventListener("click", () => {
 // then, an anonymous callback function as the second argument
 closeTaskFormBtn.addEventListener("click", () => {
   // inside the callback function, call the showModal() method on confirmCloseDialog element
-  confirmCloseDialog.showModal();
-  console.log(closeTaskFormBtn, "is clicked");
+  // confirmCloseDialog.showModal();
+  // console.log(closeTaskFormBtn, "is clicked");
   // create a formInputsContainValues variable to check if there is a value in each input field
   const formInputsContainValues =
     titleInput.value || dateInput.value || descriptionInput.value;
+
+  // if the user attempts to edit a task but decides not make changes before closing the form, there is no need to display the modal with the buttons
+  // create formInputValuesUpdated variable to check if the user made changes while editing a task
+  const formInputValuesUpdated =
+    titleInput.value !== currentTask.title ||
+    dateInput.value !== currentTask.date ||
+    descriptionInput.value !== currentTask.description;
   // now create a condition to check if formInputsContainValues is true;
   // if true, use the showModal() method on confirmCloseDialog;
-  if (formInputsContainValues) {
+  if (formInputsContainValues && formInputValuesUpdated) {
     confirmCloseDialog.showModal();
   } else {
     clearInputFields();
@@ -205,6 +212,11 @@ const addOrUpdateTask = () => {
   if (dataArrIndex === -1) {
     taskData.unshift(taskObj);
   }
+  // editing a task won't reflect when you submit the task; to make it functional,
+  // create an else block and set taskData[dataArrIndex] to taskObj
+  else {
+    taskData[dataArrIndex] = taskObj;
+  }
 
   updateTaskContainer();
   clearInputFields();
@@ -249,13 +261,15 @@ const deleteTask = (buttonEl) => {
   buttonEl.parentElement.remove();
   // use the splice() method to remove the task from the taskData array
   taskData.splice(dataArrIndex, 1);
-}
+};
 
 // *17*
 // create an arrow function to edit tasks; pass in 'buttonEl' as the parameter
 const editTask = (buttonEl) => {
   // find the index of the task you want to edit
-  const dataArrIndex = taskData.findIndex((item) => item.id === buttonEl.parentElement.id);
+  const dataArrIndex = taskData.findIndex(
+    (item) => item.id === buttonEl.parentElement.id
+  );
 
   // use square brackets to retrieve the task to be edited from taskData array using dataArrIndex
   currentTask = taskData[dataArrIndex];
@@ -266,4 +280,10 @@ const editTask = (buttonEl) => {
   titleInput.value = currentTask.title;
   dateInput.value = currentTask.date;
   descriptionInput.value = currentTask.description;
+
+  // set the innerText of the addOrUpdateTaskBtn to "Update Task"
+  addOrUpdateTaskBtn.innerText = "Update Task";
+
+  // finally, display the form modal with the values of the input fields by using classList.toggle() method to toggle the "hidden" class on taskForm element
+  taskForm.classList.toggle("hidden");
 };
