@@ -287,3 +287,26 @@ const editTask = (buttonEl) => {
   // finally, display the form modal with the values of the input fields by using classList.toggle() method to toggle the "hidden" class on taskForm element
   taskForm.classList.toggle("hidden");
 };
+
+// *18*
+// localStorage offers methods for saving, retrieving, and deleting data
+// setItem() method is used to saave an item
+// getItem() method retrieves an item
+// removeItem() method deletes an item
+// clear() method deletes all items
+// example: locatStorage.setItem("key", value); // value can be any data type
+
+// myTaskArr array haas been provided
+const myTaskArr = [
+  { task: "Walk the Dog", date: "22-04-2022" },
+  { task: "Read some books", date: "02-11-2023" },
+  { task: "Watch football", date: "10-08-2021" },
+];
+
+// use setItem() method to save it with a key of 'data'
+//in devtools, go to Application tab and click on Local Storage
+// notice a series of [objeect Object]; everything in local storage needs to be a string
+// to resolve, wrap the data in JSON.stringify() method; pass in you in the myTaskArr variable
+// this will convert the data into a string
+// example: localStorage.setItem("key", JSON.stringify(value));
+localStorage.setItem("data", JSON.stringify(myTaskArr));
