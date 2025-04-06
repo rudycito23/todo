@@ -21,12 +21,23 @@ const descriptionInput = document.getElementById("description-input");
 // Next, create a taskData constant and set it into an empty array;
 // this will store each task with their title, due date, and description
 // this storage will enable you to keep track of tasks, display them, and save them in local storage
-const taskData = [];
+// const taskData = [];
+
+// if you add, update, or remove a task, it should reflect in the UI
+// to do this, you need to modify the initial taskData to an empty array
+// make sure to parse the data coming in from local storage
+const taskData = localStorage.getItem(JSON.stringify("data"));
 
 // *3*
 // because the state can change when editing or discarding tasks, create a let currentTask variable
 // set it to an empty object; this variable will be used to track the state of each task
 let currentTask = {};
+
+// if there is a task with special characters, the app breaks;
+// to fix this, create a function called removeSpecialChars that takes a string and removes any special characters
+const removeSpecialChars = (str) => {
+  return str.replace(/['"_]/g, "");
+};
 
 // *4*
 // let's open and close the form modal
@@ -180,6 +191,7 @@ taskForm.addEventListener("submit", (e) => {
 // instead of clearing fields one-by-one, create a function that clears all the input fields\
 // you can then call the function whenever you need to clear the input fields
 const clearInputFields = () => {
+addOrUpdateTaskBtn.innerText = "Add Task";
   // set each input field to an empty string
   titleInput.value = "";
   dateInput.value = "";
@@ -191,6 +203,14 @@ const clearInputFields = () => {
 
   // then, set the currentTask variable to an empty object
   currentTask = {};
+
+  // when retreiving tasks, they should be displayed in the UI
+  // check if there is a task inside taskData array using the length of the array
+  // 0 is a falsy value, so all you need for the condition is the array length
+  // example: if (array.length) { ... }
+if (taskData.length) {
+  updateTaskContainer();
+}
 };
 
 // *15*
@@ -199,13 +219,19 @@ const clearInputFields = () => {
 // the first function will add the input values to the taskData array;
 // the second function will add the tasks to the DOM
 const addOrUpdateTask = () => {
+  // prohibit a task to be created if the title input field is empty
+  if (!titleInput.value.trim()) {
+    alert("Please provide a title");
+    return;
+  }
+
   const dataArrIndex = taskData.findIndex((item) => item.id === currentTask.id);
 
   const taskObj = {
-    id: `${titleInput.value.toLowerCase().split(" ").join("-")}-${Date.now()}`,
-    title: titleInput.value,
+    id: `${removeSpecialChars(titleInput.value).toLowerCase().split(" ").join("-")}-${Date.now()}`,
+    title: removeSpecialChars(titleInput.value),
     date: dateInput.value,
-    description: descriptionInput.value,
+    description: removeSpecialChars(descriptionInput.value),
   };
   console.table(taskObj);
 
@@ -217,6 +243,8 @@ const addOrUpdateTask = () => {
   else {
     taskData[dataArrIndex] = taskObj;
   }
+  // save the tasks to local storage
+  localStorage.setItem("data", JSON.stringify(taskData));
 
   updateTaskContainer();
   clearInputFields();
@@ -261,6 +289,11 @@ const deleteTask = (buttonEl) => {
   buttonEl.parentElement.remove();
   // use the splice() method to remove the task from the taskData array
   taskData.splice(dataArrIndex, 1);
+
+  // you want a deleted task to be removed from local storage;
+  // save tasKData to local storage, use setItem() method to save the taskData array and pass in the key "data"
+  // ensure to stringify the taskData array using JSON.stringify() method
+  localStorage.setItem("data", JSON.stringify(taskData));
 };
 
 // *17*
@@ -297,11 +330,11 @@ const editTask = (buttonEl) => {
 // example: locatStorage.setItem("key", value); // value can be any data type
 
 // myTaskArr array haas been provided
-const myTaskArr = [
-  { task: "Walk the Dog", date: "22-04-2022" },
-  { task: "Read some books", date: "02-11-2023" },
-  { task: "Watch football", date: "10-08-2021" },
-];
+// const myTaskArr = [
+//   { task: "Walk the Dog", date: "22-04-2022" },
+//   { task: "Read some books", date: "02-11-2023" },
+//   { task: "Watch football", date: "10-08-2021" },
+// ];
 
 // use setItem() method to save it with a key of 'data'
 //in devtools, go to Application tab and click on Local Storage
@@ -309,4 +342,25 @@ const myTaskArr = [
 // to resolve, wrap the data in JSON.stringify() method; pass in you in the myTaskArr variable
 // this will convert the data into a string
 // example: localStorage.setItem("key", JSON.stringify(value));
-localStorage.setItem("data", JSON.stringify(myTaskArr));
+// localStorage.setItem("data", JSON.stringify(myTaskArr));
+
+// to retrieve the data, use getItem() method and pass in the key
+// example: const data = JSON.parse(localStorage.getItem("key"));
+// const getTaskArr = localStorage.getItem("data");
+// console.log(getTaskArr);
+
+// to view the data in its original form or more readable format, use JSON.parse() method
+// const getTaskArrObj = JSON.parse(localStorage.getItem('data'));
+// console.log(getTaskArrObj);
+
+// you can use localStorage.removeItem() method to remove a specific item
+// you can use localStorage.clear() method to remove all items from local storage
+// example: localStorage.clear();
+// remove the 'data' item from local storage
+// localStorage.removeItem('data');
+// console.log(getTaskArrObj);
+
+// remove all items from local storage
+// localStorage.clear();
+// console.log(getTaskArrObj);
+
